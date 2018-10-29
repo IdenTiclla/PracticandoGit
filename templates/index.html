@@ -1,14 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-</head>
-<body>
-    <h1>Hola mundo</h1>
-    <p>Construccion nueva</p>
-    <p>otra Construccion</p>
-</body>
-</html>
+{% extends "layout.html" %}
+
+{% block title %}
+    Bienvenido
+{% endblock %}
+
+{% block content %}
+    <h1>Bienvenido a mi pagina de inicio </h1>
+{% endblock %}
