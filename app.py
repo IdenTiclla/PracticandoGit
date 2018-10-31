@@ -21,14 +21,21 @@ def signUp():
     else:
         nombre = request.form['nombre']
         password = request.form['password']
+        password_again = request.form['password_again']
         date = request.form['fecha_nac']
+        checkbox = request.form.getlist('checkbox')
 
         hash = generate_password_hash(password,method='sha256')
-        cur = mysql.connection.cursor()
-        
-        cur.execute('INSERT INTO users (nombre,hash,f_nac) VALUES (%s,%s,%s)',(nombre,hash,date))
-        mysql.connection.commit()
-        return redirect(url_for('signUp'))
+        if not nombre or not password or not password_again or not date or not checkbox:
+            return "Debes ingresar los datos"
+        else:
+            if password == password_again:
+                cur = mysql.connection.cursor()
+                cur.execute('INSERT INTO users (nombre,hash,f_nac) VALUES (%s,%s,%s)',(nombre,hash,date))
+                mysql.connection.commit()
+                return redirect(url_for('signUp'))
+            else:
+                return "Debes repetir la misma contrasenia"
 
 
 if __name__ == '__main__':
