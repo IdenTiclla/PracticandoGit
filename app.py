@@ -1,13 +1,17 @@
 from flask  import Flask,render_template,request,redirect,url_for,session,escape
 from flask_mysqldb import MySQL
 from werkzeug.security import generate_password_hash,check_password_hash
+from helpers import *
 
+# instanciando nuestra aplicacion
 app = Flask(__name__)
 # configurando conexion a la base de datos
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
 app.config['MYSQL_PASSWORD'] = 'P@ssw0rd'
 app.config['MYSQL_DB'] = 'transito'
+# clave secreta para sesiones
+app.secret_key = "12345"
 
 mysql = MySQL(app)
 
@@ -40,6 +44,9 @@ def signUp():
 
 @app.route("/login",methods=["GET","POST"])
 def login():
+    # olvidar cualquier sesion activa
+    session.clear()
+
     if request.method =="GET":
         return render_template("login.html")
     else:
@@ -53,23 +60,30 @@ def login():
         password = request.form['password']
         print(user)
         if user and check_password_hash(user[2],password):
-            session['username'] = user[1]
+            session['user_id'] = user[0]
             return redirect(url_for('home'))
         return "Tus credenciales estan incorrectas"
 
 @app.route("/logout")
+@login_required
 def logout():
-    session.pop("username",None)
-    return "desconectado"
+    #olvidar cualquier usuario
+    session.clear()
+    return redirect(url_for('login'))
 
 
 
 @app.route("/home")
+@login_required
 def home():
-    if "username" in session:
-        return "You are %s" % escape(session["username"])
-    return "you must log in first"
+    id = escape(session["user_id"])
+    cur = mysql.connection.cursor()
+    cur.execute("SELECT * FROM users WHERE id = '{0}'".format(id))
+    user = cur.fetchall()
+    nombre = user[0][1]
+    return render_template("home.html",nombre = nombre)
 
-app.secret_key = "12345"
+
+
 if __name__ == '__main__':
     app.run(debug=True)
