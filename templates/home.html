@@ -4,6 +4,45 @@
 
 
 {% block content %}
-    <h1>You are {{ nombre }} </h1>
+    <h1>You are {{ nombre }}  </h1>
+    {% if dado != 0 %}
+        Sacaste el dado {{ dado }}
+    {% endif %}
+    
+
+    <ul class="nav nav-tabs">
+            <li class="nav-item">
+              <a class="nav-link active" href="/lanzarDado">Lanzar dado</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/anotar">Anotar Puntos</a>
+            </li>
+    
+    </ul>
+
+	<table>
+            <tr>
+                    {% if 1 in dados %}
+                        <td> <img src="{{ url_for('static',filename='files/1.jpg')}}" width="315" height="315"></td>
+                    {% endif%}
+                    {% if 2 in dados %}
+                        <td> <img src="{{ url_for('static',filename='files/2.jpg')}}" width="315" height="315"></td>
+                    {% endif%}
+                    {% if 3 in dados %}
+                    <td> <img src="{{ url_for('static',filename='files/3.jpg')}}" width="315" height="315"></td>
+                    {% endif%}
+                    {% if 4 in dados %}
+                        <td> <img src="{{ url_for('static',filename='files/4.jpg')}}" width="315" height="315"></td>
+                    {% endif%}
+                    {% if 5 in dados %}
+                        <td> <img src="{{ url_for('static',filename='files/5.jpg')}}" width="315" height="315"></td>
+                    {% endif%}
+                    {% if 6 in dados %}
+                        <td> <img src="{{ url_for('static',filename='files/6.jpg')}}" width="315" height="315"></td>
+                    {% endif%}
+
+            </tr>
+    
+    </table>
 
 {% endblock %}
