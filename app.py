@@ -2,6 +2,10 @@ from flask  import Flask,render_template,request,redirect,url_for,session,escape
 from flask_mysqldb import MySQL
 from werkzeug.security import generate_password_hash,check_password_hash
 from helpers import *
+from random import randint
+
+diccionario = {"id":[],"puntajeRona":[],"puntajePartida":[]}
+dado = [0]
 
 # instanciando nuestra aplicacion
 app = Flask(__name__)
@@ -61,6 +65,8 @@ def login():
         print(user)
         if user and check_password_hash(user[2],password):
             session['user_id'] = user[0]
+            diccionario["id"].append(int(session["user_id"]))
+            diccionario["puntajeRona"].append([])
             return redirect(url_for('home'))
         return "Tus credenciales estan incorrectas"
 
@@ -81,7 +87,18 @@ def home():
     cur.execute("SELECT * FROM users WHERE id = '{0}'".format(id))
     user = cur.fetchall()
     nombre = user[0][1]
-    return render_template("home.html",nombre = nombre)
+    return render_template("home.html",nombre = nombre,dado=dado[0],dados=diccionario["puntajeRona"][int(id)-1])
+
+
+@app.route("/lanzarDado")
+def lanzarDado():
+    print(diccionario)
+    id = escape(session["user_id"])
+    dado[0] = randint(1, 6)
+    diccionario["puntajeRona"][int(id)-1].append(dado[0])
+    print(diccionario)
+    print(diccionario["puntajeRona"][int(id)-1])#
+    return redirect(url_for('home'))
 
 
 
