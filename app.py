@@ -4,7 +4,7 @@ from werkzeug.security import generate_password_hash,check_password_hash
 from helpers import *
 from random import randint
 
-diccionario = {"id":[],"puntajeRona":[],"puntajePartida":[]}
+diccionario = {"id":[],"dados":[],"cantidadRepetidos":[],"puntajeRonda":[],"puntajePartida":[]}
 dado = [0]
 
 # instanciando nuestra aplicacion
@@ -66,7 +66,10 @@ def login():
         if user and check_password_hash(user[2],password):
             session['user_id'] = user[0]
             diccionario["id"].append(int(session["user_id"]))
-            diccionario["puntajeRona"].append([])
+            diccionario["dados"].append([])
+            diccionario["cantidadRepetidos"].append(0)
+            diccionario["puntajeRonda"].append(0)
+            diccionario["puntajePartida"].append(0)
             return redirect(url_for('home'))
         return "Tus credenciales estan incorrectas"
 
@@ -87,20 +90,41 @@ def home():
     cur.execute("SELECT * FROM users WHERE id = '{0}'".format(id))
     user = cur.fetchall()
     nombre = user[0][1]
-    return render_template("home.html",nombre = nombre,dado=dado[0],dados=diccionario["puntajeRona"][int(id)-1])
+    return render_template("home.html",nombre = nombre,dado=dado[0],dados=diccionario["dados"][int(id)-1])
 
 
 @app.route("/lanzarDado")
 def lanzarDado():
-    print(diccionario)
     id = escape(session["user_id"])
     dado[0] = randint(1, 6)
-    diccionario["puntajeRona"][int(id)-1].append(dado[0])
+
+    if len(diccionario["dados"][int(id)-1]) != 6:
+        if  dado[0] not in diccionario["dados"][int(id)-1]:
+            diccionario["dados"][int(id)-1].append(dado[0])
+            diccionario["puntajeRonda"][int(id)-1] += dado[0]
+        else:
+            print('Dado repetido tu puntaje baja a cero')
+            diccionario["cantidadRepetidos"][int(id)-1] +=1
+            if diccionario["cantidadRepetidos"][int(id)-1] == 3:
+                print("PERDISTE CHOQUITO")
+            diccionario["puntajeRonda"][int(id)-1] = 0
+            diccionario["dados"][int(id)-1] = []
+    else:
+        diccionario["puntajeRonda"][int(id)-1] = 100
+        print("GANASTE CHOQUITO")
+
     print(diccionario)
-    print(diccionario["puntajeRona"][int(id)-1])#
+    print(diccionario["dados"][int(id)-1])#
     return redirect(url_for('home'))
 
-
+@app.route("/anotar")
+def anotar():
+    id = escape(session["user_id"])
+    diccionario["puntajePartida"][int(id)-1] +=diccionario["puntajeRonda"][int(id)-1]
+    diccionario["puntajeRonda"][int(id)-1] = 0
+    diccionario["dados"][int(id)-1] = []
+    print(diccionario)
+    return redirect(url_for('home'))
 
 if __name__ == '__main__':
     app.run(debug=True)
