@@ -12,8 +12,8 @@ app = Flask(__name__)
 # configurando conexion a la base de datos
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'P@ssw0rd'
-app.config['MYSQL_DB'] = 'transito'
+app.config['MYSQL_PASSWORD'] = 'admin'
+app.config['MYSQL_DB'] = 'game'
 # clave secreta para sesiones
 app.secret_key = "12345"
 
@@ -40,7 +40,7 @@ def signUp():
         else:
             if password == password_again:
                 cur = mysql.connection.cursor()
-                cur.execute('INSERT INTO users (nombre,hash,f_nac) VALUES (%s,%s,%s)',(nombre,hash,date))
+                cur.execute(f"INSERT INTO users (nombre,hash,f_nac) VALUES ('{nombre}','{hash}','{date}')")
                 mysql.connection.commit()
                 return redirect(url_for('signUp'))
             else:
@@ -50,14 +50,13 @@ def signUp():
 def login():
     # olvidar cualquier sesion activa
     session.clear()
-
     if request.method =="GET":
         return render_template("login.html")
     else:
         nombre = request.form['nombre']
         # buscar en la base de datos ese usuario con ese nombre
         cur = mysql.connection.cursor()
-        query = "SELECT * FROM users WHERE nombre = '{0}'".format(nombre)
+        query = f"SELECT * FROM users WHERE nombre = '{nombre}'"
         cur.execute(query)
         user = cur.fetchall()
         user = user[0]
@@ -65,11 +64,13 @@ def login():
         print(user)
         if user and check_password_hash(user[2],password):
             session['user_id'] = user[0]
-            diccionario["id"].append(int(session["user_id"]))
-            diccionario["dados"].append([])
-            diccionario["cantidadRepetidos"].append(0)
-            diccionario["puntajeRonda"].append(0)
-            diccionario["puntajePartida"].append(0)
+            print("ENTRAMOS CABORRRRRON")
+            if  int(session["user_id"]) not in diccionario["id"]:
+                diccionario["id"].append(int(session["user_id"]))
+                diccionario["dados"].append([])
+                diccionario["cantidadRepetidos"].append(0)
+                diccionario["puntajeRonda"].append(0)
+                diccionario["puntajePartida"].append(0)
             return redirect(url_for('home'))
         return "Tus credenciales estan incorrectas"
 
@@ -87,7 +88,7 @@ def logout():
 def home():
     id = escape(session["user_id"])
     cur = mysql.connection.cursor()
-    cur.execute("SELECT * FROM users WHERE id = '{0}'".format(id))
+    cur.execute(f"SELECT * FROM users WHERE id = '{id}'")
     user = cur.fetchall()
     nombre = user[0][1]
     return render_template("home.html",nombre = nombre,dado=dado[0],dados=diccionario["dados"][int(id)-1])
