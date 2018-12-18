@@ -1,0 +1,55 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Score table
+{% endblock %}
+
+{% block header %}
+<h1>Cs50 project ---- Welcome to my game</h1>
+<h1>The game of the dice! </h1>
+{% endblock %}
+
+{% block navbar %}
+<ul class="nav nav-tabs">
+    <li class="nav-item">
+    <a class="nav-link" href="/signUp">Sign Up</a>
+    </li>
+        <li class="nav-item">
+        <a class="nav-link" href="/login">Login</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="/help">Help</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link active" href="/score_table">Score table</a>
+    </li>
+</ul>
+{% endblock %}
+
+{% block content %}
+
+    
+    <table id="example" class="table table-striped table-bordered" style="width:100%">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Fecha nacimiento</th>
+                <th>Points</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                {% for user in users %}
+                    <td> {{ user[0] }} </td>
+                    <td> {{ user[1] }} </td>
+                    <td> {{ user[3] }} </td>
+                    <td> {{ user[4] }} </td>
+                {% endfor %}
+            </tr>
+        </tbody>
+    </table>
+
+
+{% endblock %}
+

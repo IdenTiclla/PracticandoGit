@@ -1,0 +1,10 @@
+{% extends "layout.html" %}
+
+{% block title %} You win {% endblock %}
+
+
+{% block content %}
+    <div id="win">
+        <img src="{{ url_for('static',filename='files/you_win.png')}} ">
+    </div>
+{% endblock %}

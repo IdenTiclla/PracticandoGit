@@ -1,0 +1,43 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Help
+{% endblock %}
+{% block header %}
+<h1>Cs50 project ---- Welcome to my game</h1>
+<h1>The game of the dice! </h1>
+{% endblock %}
+
+{% block navbar %}
+
+<ul class="nav nav-tabs">
+    <li class="nav-item">
+        <a class="nav-link" href="/signUp">Sign Up</a>
+    </li>
+        <li class="nav-item">
+        <a class="nav-link" href="login">Login</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link active" href="help">Help</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="score_table">Score table</a>
+    </li>
+</ul>
+
+{% endblock %}
+
+
+{% block content %}
+
+    
+    <p>The game consists of throwing dice and getting the highest score possible. <br>
+        Rules: <br>
+        - Register and start session <br>
+        -Gana the first to reach 120 points <br>
+        - Win if you roll the 6 dice without repeating any <br>
+        -Terminate the game if you take 3 times repeated dice <br>
+    </p>    
+    
+
+{% endblock %}

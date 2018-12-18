@@ -1,0 +1,10 @@
+{% extends "layout.html" %}
+
+{% block title %} You lose {% endblock %}
+
+
+{% block content %}
+    <div id="lose">
+        <img src="{{ url_for('static',filename='files/you_lose.png')}}">
+    </div>
+{% endblock %}
