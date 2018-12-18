@@ -23,6 +23,20 @@ mysql = MySQL(app)
 def index():
     return render_template("index.html")
 
+@app.route('/help')
+def help():
+   return render_template("help.html")
+@app.route('/score_table')
+def score_table():
+    cur = mysql.connection.cursor()
+    query = "SELECT * FROM users"
+    cur.execute(query)
+    users = cur.fetchall()
+    print(users)
+    for user in users:
+        print(user[1])
+    return render_template("score_table.html",users=users)
+    
 @app.route("/signUp",methods=['GET','POST'])
 def signUp():
     if  request.method == 'GET':
@@ -77,7 +91,7 @@ def login():
 @app.route("/logout")
 @login_required
 def logout():
-    #olvidar cualquier usuario
+    #forget any user
     session.clear()
     return redirect(url_for('login'))
 
@@ -98,21 +112,25 @@ def home():
 def lanzarDado():
     id = escape(session["user_id"])
     dado[0] = randint(1, 6)
-
+    # si el usuario no saco los 6 dados
     if len(diccionario["dados"][int(id)-1]) != 6:
+        # si el dado no esta en los dados que saco
         if  dado[0] not in diccionario["dados"][int(id)-1]:
             diccionario["dados"][int(id)-1].append(dado[0])
             diccionario["puntajeRonda"][int(id)-1] += dado[0]
+            
         else:
             print('Dado repetido tu puntaje baja a cero')
-            diccionario["cantidadRepetidos"][int(id)-1] +=1
-            if diccionario["cantidadRepetidos"][int(id)-1] == 3:
-                print("PERDISTE CHOQUITO")
+            diccionario["cantidadRepetidos"][int(id)-1] += 1
+            # si la cantidad de dados repetidos es 3
+            if diccionario["cantidadRepetidos"][int(id)-1] >= 3:
+                return render_template('lose.html')
             diccionario["puntajeRonda"][int(id)-1] = 0
             diccionario["dados"][int(id)-1] = []
     else:
         diccionario["puntajeRonda"][int(id)-1] = 100
-        print("GANASTE CHOQUITO")
+        #agregar puntaje a la db
+        return render_template('win.html')
 
     print(diccionario)
     print(diccionario["dados"][int(id)-1])#
@@ -121,7 +139,9 @@ def lanzarDado():
 @app.route("/anotar")
 def anotar():
     id = escape(session["user_id"])
-    diccionario["puntajePartida"][int(id)-1] +=diccionario["puntajeRonda"][int(id)-1]
+    diccionario["puntajePartida"][int(id)-1] += diccionario["puntajeRonda"][int(id)-1]
+    if diccionario["puntajePartida"][int(id)-1] >= 100:
+                return render_template('win.html')
     diccionario["puntajeRonda"][int(id)-1] = 0
     diccionario["dados"][int(id)-1] = []
     print(diccionario)
