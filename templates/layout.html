@@ -6,12 +6,112 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
     <link rel="stylesheet" href="{{ url_for('static',filename='css/main.css')}}">
+    <link rel="icon" href="{{ url_for('static',filename='files/favicon.ico')}}" type="image/x-icon"/>
     <title>{% block title%} {% endblock %}</title>
 </head>
-<h1>El juego de los dados! </h1>
+
 <body>
-    {% block content %}
-    
-    {% endblock %}
+    <div id="header">
+        {% block header %}
+
+        {% endblock %}
+    </div>
+    <div id="navbar">
+        {% block navbar %}
+
+        {% endblock %}
+    </div>
+    <div id="content">
+        {% block content %}
+
+        {% endblock %}
+    </div>
+
+    <div id="footer">
+        {% block footer %}
+            <!-- Footer -->
+            <footer class="page-footer font-small indigo" id="footer">
+
+        <!-- Footer Links -->
+        <div class="container text-center text-md-left">
+
+        <!-- Grid row -->
+        <div class="row">
+
+            <!-- Grid column -->
+            <div class="col-md-3 mx-auto">
+
+            <!-- Links -->
+            <h5 class="font-weight-bold text-uppercase mt-3 mb-4">Follow</h5>
+
+            <ul class="list-unstyled">
+                <li>
+                <a href="https://www.facebook.com/IdenTicllaChoque">Facebook</a>
+                </li>
+                <li>
+                <a href="https://twitter.com/IdenTiclla">Twitter</a>
+                </li>
+                <li>
+                <a href="https://github.com/IdenTiclla">GitHub</a>
+                </li>
+
+            </ul>
+
+            </div>
+            <!-- Grid column -->
+
+            <hr class="clearfix w-100 d-md-none">
+
+            <!-- Grid column -->
+            <div class="col-md-3 mx-auto">
+
+            <!-- Links -->
+            <h5 class="font-weight-bold text-uppercase mt-3 mb-4">Contact us</h5>
+
+            <ul class="list-unstyled">
+                <li>
+                <a href="#!">Phone: +591 69091721</a>
+                </li>
+                <li>
+                <a href="#!">Email: iden.ticlla@gmail.com</a>
+                </li>
+            </ul>
+
+            </div>
+            <!-- Grid column -->
+
+            <hr class="clearfix w-100 d-md-none">
+
+            <!-- Grid column -->
+            <div class="col-md-3 mx-auto">
+
+            <!-- Links -->
+            <h5 class="font-weight-bold text-uppercase mt-3 mb-4">Locations</h5>
+
+            <ul class="list-unstyled">
+                <li>
+                <a href="https://www.google.com.bo/maps/place/Santa+Cruz+de+la+Sierra/@-17.7575932,-63.1517181,11z/data=!3m1!4b1!4m5!3m4!1s0x93f1e81ca7c01a63:0x5c8b0a53a467611b!8m2!3d-17.8145819!4d-63.1560853?hl=es">Bolivia-Santa cruz de la sierra</a>
+                </li>
+            </ul>
+
+            </div>
+            
+
+        </div>
+        <!-- Grid row -->
+
+        </div>
+        <!-- Footer Links -->
+
+        <!-- Copyright -->
+        <div class="footer-copyright text-center py-3">© 2018 Copyright:
+        <a href="https://www.edx.org/course/cs50s-introduction-computer-science-harvardx-cs50x"> Cs50</a>
+        </div>
+        <!-- Copyright -->
+
+            </footer>
+            <!-- Footer -->
+        {% endblock %}
+    </div>
 </body>
 </html>
