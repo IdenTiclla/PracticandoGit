@@ -2,31 +2,55 @@
 
 {% block title %} SignIn {% endblock %}
 
+{% block header %}
+<h1>Cs50 project ---- Welcome to my game</h1>
+<h1>The game of the dice! </h1>
+{% endblock %}
+
+{% block navbar %}
+<ul class="nav nav-tabs">
+    <li class="nav-item">
+        <a class="nav-link" href="/signUp">Sign Up</a>
+    </li>
+        <li class="nav-item">
+        <a class="nav-link active" href="login">Login</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="help">Help</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="score_table">Score table</a>
+    </li>
+</ul>
+{% endblock %}
+
 {% block content %} 
-<h1>Sign In</h1>
+
+
+
+
+
 
 <div class="row">
     <div class="col-md-3">
         <div class="card card-body">
             <form action="/login" method="POST">
                 <div class="form-group">
-                    <label>Nombre</label>
-                    <input type="text" name="nombre" placeholder="nombre">
+                        <label >Nombre de usuario</label>
+                        <input  class="form-control" placeholder="Nombre" type = "text" name ="nombre">
+                        <small  class="form-text text-muted">Tu nombre de usuario.</small>
                 </div>
                 <div class="form-group">
-                    <label>Password</label>
-                    <input type="password" name="password" placeholder="password">
+                        <label for="exampleInputPassword1">Password</label>
+                        <input type="password" class="form-control" name="password" placeholder="Password">
                 </div>
-                <div class="form-group">
-                    
-                </div>
-                <button type="submit" class="btn btn-primary"> Login </button>
-                
-            </form> 
+                    <button type="submit" class="btn btn-primary">Login</button>
+            </form>
         </div>
     </div>
-
+    
 </div>
+
 
 
 
