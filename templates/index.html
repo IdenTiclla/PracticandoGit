@@ -1,28 +1,33 @@
 {% extends "layout.html" %}
 
 {% block title %}
-    Bienvenido
+    Welcome
+{% endblock %}
+
+{% block header %}
+<h1>Cs50 project ---- Welcome to my game</h1>
+<h1>The game of the dice! </h1>
+{% endblock %}
+
+{% block navbar %}
+<ul class="nav nav-tabs">
+    <li class="nav-item">
+      <a class="nav-link" href="/signUp">Sign Up</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="login">Login</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="help">Help</a>
+    </li>
+    <li class="nav-item">
+            <a class="nav-link" href="score_table">Score table</a>
+    </li>
+
+</ul>
 {% endblock %}
 
 
 {% block content %}
-    <h1>Bienvenido  al sistema de registro de la unidad departamental de transito </h1>
-    <p>Empezamos a trabajar hoy</p>
-    <p>Agregamos otro parrafo</p>
-    
-
-    <ul class="nav nav-tabs">
-        <li class="nav-item">
-          <a class="nav-link active" href="/signUp">Sign Up</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="login">Login</a>
-        </li>
-
-    </ul>
-    
-
-
-
 
 {% endblock %}
