@@ -34,19 +34,19 @@
             <tr>
                 <th>Id</th>
                 <th>Name</th>
-                <th>Fecha nacimiento</th>
+                <th>Birthdate</th>
                 <th>Points</th>
             </tr>
         </thead>
         <tbody>
-            <tr>
                 {% for user in users %}
-                    <td> {{ user[0] }} </td>
-                    <td> {{ user[1] }} </td>
-                    <td> {{ user[3] }} </td>
-                    <td> {{ user[4] }} </td>
+                    <tr>      
+                        <td> {{ user[0] }} </td>
+                        <td> {{ user[1] }} </td>
+                        <td> {{ user[3] }} </td>
+                        <td> {{ user[4] }} </td>
+                    </tr> 
                 {% endfor %}
-            </tr>
         </tbody>
     </table>
 
