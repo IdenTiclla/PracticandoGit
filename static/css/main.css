@@ -5,6 +5,16 @@ body{
     background: linear-gradient(to right, #414345, #232526); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
     
 }
+.center_div{
+    padding-top: 150px;
+    padding-left: 300px;
+    margin: 0 auto;
+    width:200%;
+}
+
+
+
+
 #lose{
     width: 100%;
     height: 100%;  
@@ -22,11 +32,8 @@ body{
 #content{
     background-color: rgb(124, 157, 161);
     height:655px;
-    text-align: center;
-
 }
 #footer{
     background-color: rgb(241, 234, 234);
     padding-top: 20px;
-
 }
