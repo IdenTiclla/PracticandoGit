@@ -32,9 +32,6 @@ def score_table():
     query = "SELECT * FROM users"
     cur.execute(query)
     users = cur.fetchall()
-    print(users)
-    for user in users:
-        print(user[1])
     return render_template("score_table.html",users=users)
     
 @app.route("/signUp",methods=['GET','POST'])
@@ -75,10 +72,10 @@ def login():
         user = cur.fetchall()
         user = user[0]
         password = request.form['password']
-        print(user)
+        # Si las credenciales son correctas
         if user and check_password_hash(user[2],password):
             session['user_id'] = user[0]
-            print("ENTRAMOS CABORRRRRON")
+            # Logramos iniciar sesion
             if  int(session["user_id"]) not in diccionario["id"]:
                 diccionario["id"].append(int(session["user_id"]))
                 diccionario["dados"].append([])
@@ -86,11 +83,23 @@ def login():
                 diccionario["puntajeRonda"].append(0)
                 diccionario["puntajePartida"].append(0)
             return redirect(url_for('home'))
-        return "Tus credenciales estan incorrectas"
+        # si no proporcionaron credenciales correctas
+        return redirect(url_for('login'))
 
 @app.route("/logout")
 @login_required
 def logout():
+    id = escape(session["user_id"])
+    indice = diccionario["id"].index(int(id))
+    id = diccionario["id"][indice]
+    cur = mysql.connection.cursor()
+    cur.execute(f"""
+    UPDATE users
+    SET pts = {diccionario["puntajePartida"][indice]}
+    WHERE id = {id}
+    """)
+    mysql.connection.commit()
+    diccionario["puntajePartida"][indice] = 0    
     #forget any user
     session.clear()
     return redirect(url_for('login'))
@@ -101,49 +110,75 @@ def logout():
 @login_required
 def home():
     id = escape(session["user_id"])
+    indice = diccionario["id"].index(int(id))
     cur = mysql.connection.cursor()
-    cur.execute(f"SELECT * FROM users WHERE id = '{id}'")
+    cur.execute(f"SELECT * FROM users WHERE id = {id}")
     user = cur.fetchall()
     nombre = user[0][1]
-    return render_template("home.html",nombre = nombre,dado=dado[0],dados=diccionario["dados"][int(id)-1])
+    print(diccionario["id"])
+    return render_template("home.html",nombre = nombre,repeated=diccionario["cantidadRepetidos"][indice],puntajePartida= diccionario["puntajePartida"][indice],dado=dado[0],dados=diccionario["dados"][indice])
 
 
 @app.route("/lanzarDado")
 def lanzarDado():
     id = escape(session["user_id"])
+    indice = diccionario["id"].index(int(id))
     dado[0] = randint(1, 6)
     # si el usuario no saco los 6 dados
-    if len(diccionario["dados"][int(id)-1]) != 6:
+    if len(diccionario["dados"][indice]) != 6:
         # si el dado no esta en los dados que saco
-        if  dado[0] not in diccionario["dados"][int(id)-1]:
-            diccionario["dados"][int(id)-1].append(dado[0])
-            diccionario["puntajeRonda"][int(id)-1] += dado[0]
+        if  dado[0] not in diccionario["dados"][indice]:
+            diccionario["dados"][indice].append(dado[0])
+            diccionario["puntajeRonda"][indice] += dado[0]
             
         else:
             print('Dado repetido tu puntaje baja a cero')
-            diccionario["cantidadRepetidos"][int(id)-1] += 1
+            diccionario["cantidadRepetidos"][indice] += 1
             # si la cantidad de dados repetidos es 3
-            if diccionario["cantidadRepetidos"][int(id)-1] >= 3:
+            if diccionario["cantidadRepetidos"][indice] == 3:
+                diccionario["puntajePartida"][indice] = 0
+                diccionario["dados"][indice] = []
+                diccionario["cantidadRepetidos"][indice] = 0
+                diccionario["puntajeRonda"][indice] = 0
+                cur = mysql.connection.cursor()
+                cur.execute(f"""
+                UPDATE users
+                SET pts = {diccionario["puntajePartida"][indice]}
+                WHERE id = {id}
+                """)
+                mysql.connection.commit()
                 return render_template('lose.html')
-            diccionario["puntajeRonda"][int(id)-1] = 0
-            diccionario["dados"][int(id)-1] = []
+            diccionario["puntajeRonda"][indice] = 0
+            diccionario["dados"][indice] = []
     else:
-        diccionario["puntajeRonda"][int(id)-1] = 100
+        diccionario["puntajePartida"][indice] = 100
         #agregar puntaje a la db
         return render_template('win.html')
 
     print(diccionario)
-    print(diccionario["dados"][int(id)-1])#
+    print(diccionario["dados"][indice])
     return redirect(url_for('home'))
 
 @app.route("/anotar")
 def anotar():
     id = escape(session["user_id"])
-    diccionario["puntajePartida"][int(id)-1] += diccionario["puntajeRonda"][int(id)-1]
-    if diccionario["puntajePartida"][int(id)-1] >= 100:
-                return render_template('win.html')
-    diccionario["puntajeRonda"][int(id)-1] = 0
-    diccionario["dados"][int(id)-1] = []
+    indice = diccionario["id"].index(int(id))
+    diccionario["puntajePartida"][indice] += diccionario["puntajeRonda"][indice]
+    diccionario["puntajeRonda"][indice] = 0
+    if diccionario["puntajePartida"][indice] >= 100:
+        cur = mysql.connection.cursor()
+        cur.execute(f"""
+        UPDATE users
+        SET pts = {diccionario["puntajePartida"][indice]}
+        WHERE id = {id}
+        """)
+        mysql.connection.commit()
+        diccionario["puntajePartida"][indice] = 0
+        diccionario["dados"][indice] = []
+        diccionario["cantidadRepetidos"][indice] = 0
+        diccionario["puntajeRonda"][indice] = 0    
+        return render_template('win.html')
+    diccionario["dados"][indice] = []
     print(diccionario)
     return redirect(url_for('home'))
 
